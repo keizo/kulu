@@ -1,0 +1,34 @@
+#from includes.common import *
+<div class="teaser">
+    #try
+        #if $taxonomy_images
+        <div class="taxonomy-image">
+        #for $taxonomy_image in $taxonomy_images
+            $taxonomy_image
+        #end for
+        </div>
+        #end if
+    #except
+        #pass
+    #end try
+    <h2>
+    #if $node.nid
+        <a href="/node/$node.nid" title="posted $format_date($node.created)">$node.title</a>
+    #else
+        <a class="nolink" title="posted $format_date($node.created)">$node.title</a>
+    #end if
+    </h2>
+
+    <div class="content">
+        #filter RawOrEncodedUnicode
+        $node.teaser
+        #end filter
+    </div>
+    #if 1
+    links
+      <div class="links"><span class="terms">Filed in terms</span>
+          <strong>links </strong>
+       | <a href="{node.url}" title="permanent link">#</a>
+      </div>
+    #end if
+</div>

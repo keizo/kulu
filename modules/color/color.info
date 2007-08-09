@@ -1,0 +1,10 @@
+; $Id: color.info,v 1.2 2006/11/21 20:55:34 dries Exp $
+name = Color
+description = Allows the user to change the color scheme of certain themes.
+package = Core - optional
+version = VERSION
+
+; Information added by drupal.org packaging script on 2007-01-30
+version = "5.1"
+project = "drupal"
+

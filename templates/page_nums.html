@@ -1,0 +1,19 @@
+#filter RawOrEncodedUnicode
+<ul class="pager">
+#for $num in $page_nums
+    <li>
+    #if $num[0] == $current
+        <strong>$num[1]</strong>
+    #else
+        #if $num[0] == 1
+            <a title="Go to page $num[1]" href="$path">$num[1]</a>
+        #elif $num[0]
+            <a title="Go to page $num[1]" href="$path?page=$num[0]">$num[1]</a>
+        #else
+            <span>$num[1]</span>
+        #end if
+    #end if
+    </li>
+#end for
+</ul>
+#end filter

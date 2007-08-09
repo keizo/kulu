@@ -1,0 +1,175 @@
+#from includes.common import *
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+#if $page.title 
+    <title>$page.title | $page.variable['site_name']</title>
+#else
+    <title>$page.variable['site_name'] | $page.variable['site_slogan']</title>
+#end if
+#try
+    $head
+#except
+    #pass
+#end try
+ <style type="text/css" media="screen">
+    @import url(/static/layout.css);
+    @import url(/static/style.css);
+ </style>
+<!-- styles variable here -->
+<script type="text/javascript"><!--//--><![CDATA[//><!--
+sfHover = function() {
+    var sfEls = document.getElementById("nav").getElementsByTagName("LI");
+    for (var i=0; i<sfEls.length; i++) {
+        sfEls[i].onmouseover=function() {
+            this.className+=" sfhover";
+        }
+        sfEls[i].onmouseout=function() {
+            this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+        }
+    }
+}
+if (window.attachEvent) window.attachEvent("onload", sfHover);
+//--><!]]></script>
+</head>
+<body>
+
+<div id="header">
+    <div id="logo"><a href="/"><img src="/static/images/logo.png" alt="OCPaddler.com" width="230" height="50" /></a></div>
+    <div id="nav">
+        <ul class="nav">
+            <li><a href="/forum">forum</a></li>
+            <li><a href="/gallery">photos</a></li>
+            <li><a href="/videos">videos</a></li>
+            <li><a href="/event">calendar</a></li>
+            <li><a href="/resources">more&not;</a>
+                <ul>
+                    <li><a href="/articles">articles</a></li>
+                    <li><a href="/canoeclubs">canoe club list</a></li>
+                    <li><a href="/classifieds">classifieds</a></li>
+                    <li><a href="/game">game</a></li>
+                    <li><a href="/links">links</a></li>
+                    <li><a href="/popular">popular</a></li>
+                </ul> 
+            </li>
+            <li><a href="/search">search&not;</a>
+                <ul class="search-box"><li>
+            <form id="search_block_form" method="post" action="/search/node">
+<input type="text" class="form-text" title="Enter the terms you wish to search for." value="" size="15" id="edit-search_block_form_keys" name="keys" maxlength="128"/>
+<input class="form-submit" type="submit" value="Search" name="op"/>
+<input id="edit-search-form" type="hidden" value="search_form" name="form_id"/>
+</form>
+                </li></ul> 
+            </li>
+            <!-- special menu here -->
+        </ul>
+    </div>
+    <div id="user_nav">
+#if $page.user.uid
+             <ul>
+                <li class="title"><strong>$page.user.name &nbsp;</strong></li>
+              <li><a href="/node/add">Submit</a></li>
+              <li><a href="/user">My Account</a></li>
+    #if 1
+    <!-- page.user.privatemsg_new_messages -->
+        <li class="inboxfull">
+    #else
+        <li>
+    #end if
+
+            <a href="/privatemsg">Inbox (!<!--page.user.privatemsg_new_messages-->)</a>'
+            </li>
+
+              <li><a href="/logout">Log Out</a></li>
+                   </ul>
+                <p>
+<!-- users online information -->
+                </p>
+#else
+            <form action="/user" method="post">
+              <div id="login_remember_me">
+        <input id="edit-remember-me" class="form-checkbox" type="checkbox" value="1" name="remember_me"/>
+              remember me</div>
+              <div id="login_username">paddler login:
+              <input class="login" type="text" name="name" id="name" size="12" value="username" onFocus="if (this.value == 'username') this.value = '';mypass=document.getElementById('pass');if (mypass.value=='password') {mypass.type='password';mypass.value='';}" />
+            
+              <input class="login" name="pass" id="pass" type="text" onFocus="this.type='password';if (this.value == 'password') this.value='';" value="password" size="12" />
+            
+              <input id="edit-user-login" type="hidden" value="user_login" name="form_id"/> 
+              <input name="op" type="image" src="/static/images/login_but.gif" value="Log in" />
+              </div>
+      </form>
+#end if
+    </div>
+</div>
+
+<div id="header2">&nbsp;</div>
+
+
+<div id="frame">
+    <div id="main">
+<!-- breadcrumbs, messages, tabs -->
+#filter RawOrEncodedUnicode
+$page.message
+#end filter
+<!-- left and right columns for front page -->
+#if $page.path != '/'
+        <div id="content_span">
+            <!-- put sidebar logic -->
+            <div id="sidebar_nospan">
+            sidebar_left
+            </div>
+        <!-- start main content -->
+        #block content
+            
+        #end block
+        <!-- end main content -->
+        </div>
+#else
+        <div id="content">
+        <!-- start main content -->
+        #block content
+        
+        #end block
+        <!-- end main content -->
+        </div>
+        <div id="sidebar">
+        <!-- for block in sidebar -->
+        #block sidebar
+        
+        #end block
+        </div>
+#end if
+
+    </div>
+    <div id="column3">
+        #try
+            $sidebar_right
+        #except
+            #pass
+        #end try
+    </div>
+</div>
+
+<div id="footer">
+    <ul class="nav">
+        <li><a href="/log">WebLog</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/share">Terms</a></li>
+        <li><a href="/rss">RSS</a></li>
+        <li><a href="mailto:keizo@ocpaddler.com">email:Keizo</a></li>     
+    </ul>
+<div id="footer2">
+<p class="small">$page.variable['footer_message']</p>
+
+closure?
+
+<!-- put google analytics here -->
+<p class="small">
+<!-- page load time -->
+</p>
+</div>
+</div>
+</body>
+</html>

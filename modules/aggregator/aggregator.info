@@ -1,0 +1,10 @@
+; $Id: aggregator.info,v 1.3 2006/11/21 20:55:33 dries Exp $
+name = Aggregator
+description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
+package = Core - optional
+version = VERSION
+
+; Information added by drupal.org packaging script on 2007-01-30
+version = "5.1"
+project = "drupal"
+

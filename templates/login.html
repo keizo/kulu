@@ -1,0 +1,18 @@
+
+#extends page
+
+
+#block content
+#filter RawOrEncodedUnicode
+
+<form name="login" method="post"> 
+#if not $form.valid
+<p class="error">Oops, there was an error. Please try again:</p> 
+#end if
+$form.render()
+<input type="submit" />
+</form>
+
+#end filter
+#end block
+

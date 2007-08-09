@@ -1,0 +1,24 @@
+#from includes.common import *
+#extends page
+
+
+#block content
+#filter RawOrEncodedUnicode
+
+<form name="register" method="post"> 
+#if not $form.valid
+<p class="error">Oops, there was an error. Please try again:</p> 
+#end if
+$form.render()
+
+<table>
+   <tr><th><label for="captcha">Word Verification:</label></th><td>
+       $captcha
+       <p>This helps prevent spam.</p></td><td id="recaptcha"></td></tr>
+</table>
+<input type="submit" />
+</form>
+
+#end filter
+#end block
+

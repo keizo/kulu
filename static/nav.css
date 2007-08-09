@@ -1,0 +1,91 @@
+/*  Block User Navigation */
+#block-user-1 h2, .sidebar .block-user .content {
+     margin: 0;
+     padding: 0;
+     border: 0;
+     }
+#block-user-1 h2 {
+     background: #EDF2F2 url(menu_head.png) top right repeat-x;
+     overflow: hidden; width: 160px;
+     }
+#block-user-1 > h2 {
+	margin-left:6px;
+    width: 138px;
+     }
+#block-user-1 h2 span {
+     color: #000;
+     display: block;
+     padding: 0 0.5em 0.33em 6px;
+     }
+#block-user-1 h2:before {
+     line-height: 0.1;
+     font-size: 1px;
+     background: transparent url("menu_tr.gif") no-repeat top right;
+     margin: 0;
+     height: 9px;
+     display: block;
+     content: url("key-point_tl.gif");
+     }
+.block-user .menu:after {
+     display: block;
+     clear: both;
+     padding-top: 0;
+     line-height: 0.1;
+     font-size: 1px;
+     content:  url("key-point_bl.gif");
+     margin: 0;
+     height: 8px;
+     background: transparent url("menu_br.gif") scroll no-repeat bottom right ;
+     }
+.block-user .menu {
+	background: #EDF2F2 url("menu_back.gif") right repeat-y;
+	margin-bottom: 1.0em;
+	}
+.block-user .menu, .block-user .menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	}
+.block-user .menu ul {
+    border-left: 1px solid #D0D9D9;
+    border-bottom: 1px solid #D0D9D9;
+    padding: 0.3em 0;
+    }
+.block-user .menu ul li {
+	display: block; /* need for IE spacing issue */
+	padding: 0.3em 0 0.3em 10px;
+	margin: 0;
+	list-style-type: none;
+	list-style-image: none;
+    }
+.block-user .menu li.expanded {
+    background: url(icons_expanded.png) 0px 6px no-repeat;
+    }
+.block-user .menu li.leaf {
+    background: url(icons_leaf.png) 0px 6px no-repeat;
+    }
+.block-user .menu li.collapsed {
+    background: url(icons_collapsed.png) 0px 6px no-repeat;
+    }
+.block-user .menu li.expanded:hover {
+    background-position: -200px 6px ;
+    }
+.block-user .menu li.leaf:hover {
+    background-position: -200px 6px;
+    }
+.block-user .menu li.collapsed:hover {
+    background-position: -200px 6px;
+    }
+.block-user .menu li a {
+     display: block;
+     padding: 0;
+     padding-left: 10px;
+ 	 margin: 0;
+     text-decoration: none;
+     }
+.block-user .menu li a.active {
+     font-weight: bold;
+     }
+.block-user .menu li a:hover {
+     text-decoration: underline;
+     }

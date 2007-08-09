@@ -1,0 +1,16 @@
+#extends page
+
+#block content
+
+#filter RawOrEncodedUnicode
+
+<form name="main" method="post"> 
+#if not $form.valid
+<p class="error">Try again, AmeriCAN:</p> 
+#end if
+$form.render()
+<input type="submit" />    </form>
+
+#end filter
+
+#end block

@@ -1,0 +1,36 @@
+
+
+MODULE HOOKS (polymorphic functions or whatever they are)
+
+There are a number of functions that are called automatically if they exist.
+
+node_load(nid, vid)
+    This function is implemented in node modules that want to add or modify a node.
+    See the link module for example.  The returned storage object gets appended
+    to the specific node.  This data gets cached automatically.
+    
+node_prepare(node):
+    This function gets called after node_load and is where you should apply 
+    any text filtering or other additions to add to the node.  
+
+drupy_cron()
+    A cron() function can be put in any module that needs stuff done periodically.
+    
+drupy_filter(text):
+    Any module with this function defined can be used as input filter for
+    text used in drupy.
+    
+form_add_node():
+    
+
+NODE MODULES
+
+    A node module is any module that implements a node_load(nid,vid) function.
+    The name of the module must be the same as the node type.
+    
+
+MODULE CONVENTIONS
+
+Functions named 'listing_whatever' are probably going to require pagination.  
+Because inc.pager.query() returns a tuple of (iter, pager_object) it is 
+convention to also return a similarly formatted (sequence, pager_object) from 'listing_whatever'.  See node module for example.

@@ -1,0 +1,10 @@
+; $Id: blog.info,v 1.4 2006/12/17 22:02:46 dries Exp $
+name = Blog
+description = Enables keeping easily and regularly updated user web pages or blogs.
+package = Core - optional
+version = VERSION
+
+; Information added by drupal.org packaging script on 2007-01-30
+version = "5.1"
+project = "drupal"
+

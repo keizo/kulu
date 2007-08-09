@@ -1,0 +1,43 @@
+/* imported for all page nodes */
+
+#canoeclubs li {
+list-style-type:none;
+margin-left:3em;
+}
+#canoeclubs li h3 {
+margin:0 0 0 1em;
+}
+#canoeclubs li h2 {
+margin:1em 0 0 0;
+border-bottom:1px dotted #CCCCCC;
+}
+#canoeclubs li a {
+margin-left:2em;
+}
+
+#link_page dl {
+margin-left:5em;
+}
+#link_page dt {
+margin:1em 0 0 0;
+width:300px;
+text-align:right;
+}
+#link_page dt.heading h3 {
+margin:0 0 0 -1em;
+text-align:left;
+}
+#link_page dt.heading h2 {
+margin:1em 0 0 -2em;
+text-align:left;
+border-bottom:1px dotted #000;
+}
+#link_page dt a {
+
+}
+#link_page dd {
+margin:-1.2em 0 0 320px;
+font-size:.8em;
+padding:0 0 0 2em;
+border-left:1px dotted #000;
+}

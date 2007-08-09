@@ -1,0 +1,24 @@
+#from includes.common import *
+#extends page
+
+#def title
+Sorry, I couldn't find that page.
+#end def
+
+#block content
+
+  <div id="title">
+  <h1>$page.title </h1>
+
+  </div>
+
+  <div class="content">
+
+#filter RawOrEncodedUnicode
+put stuff here that they might want to see
+#end filter
+  </div>
+
+</div>
+
+#end block

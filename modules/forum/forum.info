@@ -1,0 +1,11 @@
+; $Id: forum.info,v 1.4 2006/11/21 20:55:34 dries Exp $
+name = Forum
+description = Enables threaded discussions about general topics.
+dependencies = taxonomy comment
+package = Core - optional
+version = VERSION
+
+; Information added by drupal.org packaging script on 2007-01-30
+version = "5.1"
+project = "drupal"
+

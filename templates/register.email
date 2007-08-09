@@ -1,0 +1,13 @@
+#import glbl
+
+Thank you for registering at $glbl.variable['site_name']. 
+
+You may activate you account by clicking on this link or copying and pasting it in your browser:
+
+http://www.ocpaddler.com/user/activate/$activate_key
+
+After logging in, you will be redirected to http://www.ocpaddler.com/user/2439/edit so you can change your password.
+
+Aloha,
+
+OCPaddler.com

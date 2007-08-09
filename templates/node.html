@@ -1,0 +1,49 @@
+#from includes.common import *
+#extends page
+
+#block content
+<div id="story">  
+#try
+    <div class="taxonomy-image">
+    #for $taxonomy_image in $taxonomy_images:
+        $taxonomy_image; 
+    #end for
+    </div>
+#except
+    #pass
+#end try
+#if $node.title
+  <div id="title">
+  <h1>$node.title </h1>
+    #try
+    <div id="info" class="small">
+    <span class="taxonomy">Filed in $terms </span>
+    </div>
+    #except
+        #pass
+    #end try
+  </div>
+#end if
+
+
+  <div class="content">
+
+  <!--
+<div id="article_sidebar"><h3 class="title">Related Info</h3>
+</div> 
+  -->
+
+#filter RawOrEncodedUnicode
+$node.body
+#end filter
+<p><em>Posted by <a href="/user/$node.uid">$node.name</a> on $format_date($node.created) </em></p>
+  </div>
+#if $links
+  <div class="links"><strong>$links </strong>
+   | <a href="${node.url}" title="permanent link">#</a>
+  </div>
+#end if
+
+</div>
+
+#end block
