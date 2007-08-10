@@ -34,8 +34,8 @@ def node_load(nid, vid):
         r.uid FROM node_revisions r WHERE r.nid = $nid AND r.vid = $vid''', 
         vars=locals())[0]
     except IndexError:
-        raise
-        # TODO: accept this error.  Report to watchdog that node table
+        raise "node table out of sync with revisions"
+        # TODO:  Report to watchdog that node table
         # and this addition table are out of sync for some reason.
     return addition
     
@@ -59,7 +59,13 @@ def node_insert(node):
                title=node.title, format=node.format)
     
 def node_update(node):
-   pass
+   teaser = node.body.split('<!--break-->')[0]  # Create the teaser
+   # TODO: add something so it doesn't have to create a new revision
+   # every single time we change something.
+   new_vid = node.vid + 1
+   web.insert('node_revisions',nid=node.nid,vid=new_vid, uid=node.uid,
+              teaser=teaser, body=node.body, timestamp=node.time_now, 
+              title=node.title, format=node.format)
     
 def form_node(users_roles=[1]):
     return form.Form(

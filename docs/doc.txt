@@ -25,8 +25,9 @@ form_add_node():
 
 NODE MODULES
 
-    A node module is any module that implements a node_load(nid,vid) function.
+    A node module is any module that implements a node type.
     The name of the module must be the same as the node type.
+    A node module must have the attribute drupy_node_module.
     
 
 MODULE CONVENTIONS

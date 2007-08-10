@@ -99,9 +99,19 @@ class node_edit(page):
             form = _form_node(node.type, page.user.roles.keys())
             
             if form.validates():
-                content = form.d
+                data = form.d
+                node.time_now = int(time.time())
+                node.uid = page.user.uid
+                node = web.storify(data, **node)
                 
-                web.render('generic.html')
+                # TODO: update all publishing options in 'node' table
+                web.update('node', where='nid=$node.nid AND vid=$node.vid',
+                    vid=(node.vid+1), vars=locals())
+                # Do module specific updates.
+                if hasattr(mod[node.type], 'node_update'):
+                    mod[node.type].node_update(node)
+                    
+                web.redirect('/node/'+str(node.nid))
                 
     def _checkaccess(self, node):
         if self.page.user.uid and self.page.user.uid == node.uid:  # user is the owner
