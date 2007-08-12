@@ -114,6 +114,7 @@ class node_edit(page):
                 web.redirect('/node/'+str(node.nid))
                 
     def _checkaccess(self, node):
+        """Check if the current user can edit this node."""
         if self.page.user.uid and self.page.user.uid == node.uid:  # user is the owner
             # CAVEAT: even if anyone can edit, the owner can edit only
             # if 'edit own' is checked too
