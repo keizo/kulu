@@ -33,12 +33,15 @@ class node(page):
 class node_add(page):
     def GET(self, node_type):
         page = self.page
+        self.node_type = node_type
         f = _form_node(node_type, page.user.roles.keys())
         if not f: pagenotfound()
         else:
             checkaccess(page.user, ''.join(('create ',node_type,' content')))
+            
             content = '<form method="post" name="new_node">'
             content += f.render()
+            content += self._pub_options()
             content += '<input type="submit" /></form>'
                         
             web.render('generic.html')
@@ -72,6 +75,16 @@ class node_add(page):
         content += form.render()
         content += '<input type="submit" /></form>'
         web.render('generic.html')
+        
+    def _pub_options(self):
+        if hasaccess(self.page.user, \
+           ''.join(('alter ',self.node_type,' publishing defaults'))):
+            pub_options = _form_pub_options()
+            data = web.input() or mod[self.node_type].defaults
+            print 'data', data
+            pub_options.fill(data)
+            return pub_options.render()
+        else: return ''
 
 class node_edit(page):
     def GET(self, nid):
@@ -135,6 +148,7 @@ def _perms():
             perms.append(''.join(('edit ',key,' content')))
             perms.append(''.join(('delete own ',key,' content')))
             perms.append(''.join(('delete ',key,' content')))
+            perms.append(''.join(('alter ',key,' publishing defaults')))
     return tuple(perms)
 perms = _perms()
 
@@ -245,3 +259,12 @@ def _form_node(node_type, users_roles=[1]):
         return mod[node_type].form_node(users_roles)
     else:  # non-existant node
         return False  #TODO: file watchdog error?
+        
+def _form_pub_options():
+    return form.Form(
+        form.Checkbox('status'),
+        form.Checkbox('promote'),
+        form.Checkbox('moderate'),
+        form.Checkbox('sticky'),
+        form.Checkbox('comment'),
+        )

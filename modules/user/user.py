@@ -43,7 +43,7 @@ class user(page):
         page = self.page
         form = form_login()
         if form.validates():
-            # successful login
+            # successful login info
             data = form.d
             login(email=data.email,remember_me=data.remember_me)
             web.redirect('/user')
@@ -312,15 +312,17 @@ def anonymous_user(sid = ''):
         session_in_db=False, remember_me=True)
 
 def login(email='',user='',remember_me=''):
-    # TODO: implement login by user in addition to email
+    # TODO: implement login by username in addition to email
     r = '0'
     if remember_me:
         r = '1'
     login_time = int(time.time())
     user = web.select('users',where='email = $email',vars=locals())[0]
+    #print user
     web.transact()
     web.query("UPDATE users SET login = $login_time, remember_me = $r \
         WHERE uid = $user.uid", vars=locals())
+    #print user.uid
     inc.session.regenerate(uid=user.uid)
     web.commit()
 

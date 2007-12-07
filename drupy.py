@@ -7,7 +7,7 @@ __revision__ = "9"
 __license__ = "MIT License"
 __author__ = "Keizo Gates <kzo@kzo.net>"
 
-__all__ = ["page","pagenotfound","access","checkaccess"]
+__all__ = ["page","pagenotfound","access","checkaccess","hasaccess"]
 
 #python imports
 
@@ -24,13 +24,15 @@ inc = loader.import_('includes')
 #
 class page:
     def __init__(self):
+        print 'page init'
         self.page = web.storage()
         self.page.path = web.ctx.path
         self.page.variable = glbl.variable
         self.page.title = ''
         self.page.message = ''
         self.page.user = inc.session.read()
-        self.sess()
+        print self.page.user
+        #self.sess()
         
     def sess(self):
         inc.session.write(self.page.user.sid,'',user=self.page.user)
@@ -69,9 +71,18 @@ def checkaccess(user, *perms):
     needs to be passed in.  Useful if you don't know the perms before the
     function is called -- as in node.py
     """
+    # TODO: replace the next four lines with hasaccess function
     for user_rid in user.roles:
         for p in perms:
             if p in glbl.perm[int(user_rid)]:
                 return True
     print 'access denied'
     web.redirect('/denied?url='+web.ctx.path)
+    
+def hasaccess(user, *perms):
+    """Returns a bool.  True if user has the perms, false if not."""
+    for user_rid in user.roles:
+        for p in perms:
+            if p in glbl.perm[int(user_rid)]:
+                return True
+    return False

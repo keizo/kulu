@@ -86,7 +86,8 @@ if __name__ == "__main__":
     print 'setting up loadhooks'
     web._loadhooks['aliased_url'] = aliased_url 
     
-    mw = [start_mw, web.profiler]
+    #mw = [start_mw, web.profiler]
+    mw = [start_mw]
     print 'starting server'
     web.run(urls, globals(), *mw)
     
