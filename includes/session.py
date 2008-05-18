@@ -95,8 +95,6 @@ def write(key, value='',user=None):
         cache = 0
         hostname = web.ctx.env['REMOTE_ADDR']
         timestamp = int(time.time())
-        print web.query("INSERT INTO sessions (sid, uid, cache, hostname, session, timestamp) \
-            VALUES ($sid, $user.uid, $cache, $hostname, $value, $timestamp)", vars=locals(), _test=True)
         web.query("INSERT INTO sessions (sid, uid, cache, hostname, session, timestamp) \
             VALUES ($sid, $user.uid, $cache, $hostname, $value, $timestamp)", vars=locals())
         web.setcookie("_SID_",sid,expires=expires)

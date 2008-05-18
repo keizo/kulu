@@ -235,6 +235,7 @@ def _node_load(node):
     if mod.has_key(node.type) and hasattr(mod[node.type], 'node_load'):
         additions = mod[node.type].node_load(node.nid,node.vid)
         node = web.storify(additions,**node)
+    else: raise "node type does not exist, but it's in the database. check for missing module", node.type
     return node
     
 def _node_prepare(node, teaser=False):
@@ -242,6 +243,7 @@ def _node_prepare(node, teaser=False):
     function.  This includes text filters and default node parameters."""
     if mod.has_key(node.type) and hasattr(mod[node.type], 'node_prepare'):
         node = mod[node.type].node_prepare(node, teaser)
+    else: raise "node type does not exist, but it's in the database. check for missing module", node.type
     return node
         
 def drupy_cron():

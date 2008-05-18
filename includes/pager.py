@@ -56,6 +56,20 @@ def query(sql_query, vars={}, limit = 10, count_query = None, processed=False, _
         print node
     print page_nums.render()
     
+    DOCTEST
+    >>> import pager
+    >>> limit=10
+    >>> iter_nodes, page_nums = pager.query('''SELECT n.nid, c.cache, c.nid \
+    ...     AS cache_nid, c.vid as cache_vid, n.vid, n.type, \
+    ...     n.status, n.created, n.changed, n.comment, n.promote, n.sticky, \
+    ...     u.uid, u.name, u.picture, u.data FROM node n INNER JOIN \
+    ...     users u ON u.uid = n.uid LEFT JOIN cache_node c ON c.nid = n.nid \
+    ...     AND c.vid = n.vid WHERE n.promote = 1 AND n.status = 1 \
+    ...     ORDER BY n.sticky DESC, n.created DESC''',limit=limit, _test=True)
+    count_query: SELECT COUNT(*) FROM node n INNER JOIN     users u ON u.uid = n.uid LEFT JOIN cache_node c ON c.nid = n.nid     AND c.vid = n.vid WHERE n.promote = 1 AND n.status = 1    
+    >>> iter_nodes
+    <sql: 'SELECT n.nid, c.cache, c.nid     AS cache_nid, c.vid as cache_vid, n.vid, n.type,     n.status, n.created, n.changed, n.comment, n.promote, n.sticky,     u.uid, u.name, u.picture, u.data FROM node n INNER JOIN     users u ON u.uid = n.uid LEFT JOIN cache_node c ON c.nid = n.nid     AND c.vid = n.vid WHERE n.promote = 1 AND n.status = 1     ORDER BY n.sticky DESC, n.created DESC LIMIT 10 OFFSET 40'>
+    
     NOTE: right now the regex only works when the sql is all caps.  
         i.e. inc.pager.query('select * From node WHERE uid=5 ORDER BY nid')
         would not work.  It's a good convention, but maybe should fix the regex
@@ -69,11 +83,15 @@ def query(sql_query, vars={}, limit = 10, count_query = None, processed=False, _
         p = re.compile(r'SELECT.*?FROM (.*) ORDER BY .*')
         count_query = p.sub(lambda m: "SELECT COUNT(*) FROM %s" % m.group(1), sql_query)
 
-    count = web.query(count_query)[0].values()[0]
-
-    num_pages = int(float(count) / limit + 1)
-
-    page = _current_page()
+    if _test:
+        num_pages=10
+        page = 5
+        print 'count_query:', count_query
+    else:
+        count = web.query(count_query)[0].values()[0]
+        num_pages = int(float(count) / limit + 1)
+        page = _current_page()
+    
     #page number validation
     #todo !!! wait a minute, maybe these two lines are no good. 
     # cause then there can be many urls for the first and last pages...

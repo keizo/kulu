@@ -24,15 +24,13 @@ inc = loader.import_('includes')
 #
 class page:
     def __init__(self):
-        print 'page init'
         self.page = web.storage()
         self.page.path = web.ctx.path
         self.page.variable = glbl.variable
         self.page.title = ''
         self.page.message = ''
         self.page.user = inc.session.read()
-        print self.page.user
-        #self.sess()
+        self.sess()
         
     def sess(self):
         inc.session.write(self.page.user.sid,'',user=self.page.user)
