@@ -12,6 +12,7 @@ mod = loader.import_('modules')
 urls = (
     '/node/(\d+)','node',
     '/node/(\d+)/edit','node_edit',
+    '/node/add','node_add_list',
     '/node/add/(.+)','node_add',
     )
 perms = ('most modules can set perms here as a tuple, but not this one',)
@@ -30,6 +31,17 @@ class node(page):
             except:
                 web.render('node.html')
 
+class node_add_list(page):
+    def GET(self):
+        page = self.page
+        content = ''
+        for key in mod:
+            if getattr(mod[key], 'drupy_node_module', False):
+                node_type = key
+                if hasaccess(page.user, ''.join(('create ',node_type,' content'))):
+                    content += '<p><a href="/node/add/'+str(node_type)+'">'+str(node_type)+'</a></p>'
+        web.render('generic.html')
+        
 class node_add(page):
     def GET(self, node_type):
         page = self.page
@@ -263,10 +275,11 @@ def _form_node(node_type, users_roles=[1]):
         return False  #TODO: file watchdog error?
         
 def _form_pub_options():
+    ###TODO: implement defaults
     return form.Form(
-        form.Checkbox('status'),
-        form.Checkbox('promote'),
-        form.Checkbox('moderate'),
-        form.Checkbox('sticky'),
-        form.Checkbox('comment'),
+        form.Checkbox('status',description="Published"),
+        form.Checkbox('promote', description="Promote to front page"),
+        form.Checkbox('moderate', description="Moderate"),
+        form.Checkbox('sticky', description="Sticky"),
+        form.Checkbox('comment', description="Allow Comments"),
         )

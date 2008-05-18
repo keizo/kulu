@@ -220,7 +220,7 @@ def form_admin_access():
                 for role in roles:
                     if perm in role.perm: checked = True
                     else: checked = False
-                    fields.append(form.Checkbox('role_'+str(role.rid), 
+                    fields.append(form.CheckboxList('role_'+str(role.rid), 
                         value=perm, checked=checked, description=perm))
     fields = tuple(fields)
     return Form(*fields)
