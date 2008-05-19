@@ -39,17 +39,17 @@ def node_load(nid, vid):
         # and this addition table are out of sync for some reason.
     return addition
     
-def node_prepare(node, teaser=False):
+def node_prepare(node):
     node.read_more = len(node.body) > len(node.teaser)
     if node.format:
-        if teaser and node.teaser:
+        if node.teaser:
             node.teaser = modules.filter.process(node.teaser, node.format)
-        else:  # node.body is going to get used
-            # removed any <!--break--> tags
-            temp = node.body.split('<!--break-->')
-            node.body = ''.join(temp)
-            # now apply the usual filters
-            node.body = modules.filter.process(node.body, node.format)
+
+        # removed any <!--break--> tags
+        temp = node.body.split('<!--break-->')
+        node.body = ''.join(temp)
+        # now apply the usual filters
+        node.body = modules.filter.process(node.body, node.format)
     return node
     
 def node_insert(node):

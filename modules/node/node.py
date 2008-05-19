@@ -26,10 +26,22 @@ class node(page):
         else:
             links = ''
             page.title = node.title
+            
+            #controls are for the edit/delete/revisions/etc links for a node
+            #is there a better place to do this than here?
+            controls = []
+            if hasaccess(self.page.user, ''.join(('edit ', node.type, ' content'))) \
+                or (hasaccess(page.user, ''.join(('edit own ', node.type, ' content'))) \
+                and page.user.uid == node.uid):
+                controls.append( (''.join(('/node/', str(node.nid), '/edit')),'edit') )
+            controls = web.render('node_controls.html', asTemplate=True)
+            
             try:
                 web.render(''.join(('node-',node.type,'.html')))
             except:
                 web.render('node.html')
+    
+        
 
 class node_add_list(page):
     def GET(self):
@@ -101,7 +113,7 @@ class node_add(page):
 class node_edit(page):
     def GET(self, nid):
         page = self.page
-        node = mod.node.load(nid)
+        node = mod.node.load(nid, raw = True)
         if node is None:
             pagenotfound()
         else:
@@ -164,7 +176,8 @@ def _perms():
     return tuple(perms)
 perms = _perms()
 
-def load(nid, revision = None, **args):
+def load(nid, revision = None, raw = False, **args):
+    """raw specifies to load it uncached and unfiltered"""
     try:  # TODO: put less code in this try, (pep8)
         node = web.query('''SELECT n.nid, n.vid, c.cache, \
         c.nid AS cache_nid, c.vid AS cache_vid, n.type, n.status, \
@@ -180,7 +193,7 @@ def load(nid, revision = None, **args):
 
     if node.nid:  # Is a valid node
         # Prepare node by adding additional data and processing filters
-        node = _prepared(node)
+        node = _prepared(node, raw = raw)
     return node
 
 def listing_default(limit=0):
@@ -200,7 +213,7 @@ def listing_default(limit=0):
         # This uses only as many db queries as there are types.
         # The way it is now is fine, until many nodes on the default page 
         # are not default node types.
-        nodes.append(_prepared(node, teaser=True))
+        nodes.append(_prepared(node))
     return nodes, page_nums
     
 def render_many(nodes):
@@ -213,8 +226,8 @@ def render_many(nodes):
             t.append(str(web.render('node_teaser.html', asTemplate=True)))
     return ''.join(t)
 
-def _prepared(node, teaser=False):
-    if node.cache:
+def _prepared(node, raw=False):
+    if node.cache and not raw:
         cached = pickle.loads(node.cache)
         
         # override the user info in cached, since when the user updates their
@@ -229,16 +242,17 @@ def _prepared(node, teaser=False):
     node = _node_load(node)
     
     # Apply filters or other preperations.
-    node = _node_prepare(node, teaser=teaser)
+    if not raw:
+        node = _node_prepare(node)
     
-    # Cache all that work so we never have to do it until something changes.
-    pickled = pickle.dumps(node)
-    if node.cache_nid:
-        web.update('cache_node',where='nid=$node.nid AND vid=$node.vid',
-            created=time.time(), cache=pickled)
-    else:
-        web.insert('cache_node',nid=node.nid,vid=node.vid,
-            created=time.time(),cache=pickled)
+        # Cache all that work so we never have to do it until something changes.
+        pickled = pickle.dumps(node)
+        if node.cache_nid:
+            web.update('cache_node',where='nid=$node.nid AND vid=$node.vid',
+                created=time.time(), cache=pickled)
+        else:
+            web.insert('cache_node',nid=node.nid,vid=node.vid,
+                created=time.time(),cache=pickled)
     
     return node
     
@@ -250,11 +264,11 @@ def _node_load(node):
     else: raise "node type does not exist, but it's in the database. check for missing module", node.type
     return node
     
-def _node_prepare(node, teaser=False):
+def _node_prepare(node):
     """Apply preperations specified in the node module's 'node_prepare'
     function.  This includes text filters and default node parameters."""
     if mod.has_key(node.type) and hasattr(mod[node.type], 'node_prepare'):
-        node = mod[node.type].node_prepare(node, teaser)
+        node = mod[node.type].node_prepare(node)
     else: raise "node type does not exist, but it's in the database. check for missing module", node.type
     return node
         
