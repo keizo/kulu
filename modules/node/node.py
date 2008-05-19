@@ -14,6 +14,7 @@ urls = (
     '/node/(\d+)/edit','node_edit',
     '/node/add','node_add_list',
     '/node/add/(.+)','node_add',
+    '/node/(\d+)/delete','node_delete'
     )
 perms = ('most modules can set perms here as a tuple, but not this one',)
 
@@ -123,7 +124,9 @@ class node_edit(page):
             
             content = '<form method="post">'
             content += form.render()
-            content += '<input type="submit" /></form>'
+            content += '<input type="submit" />'
+            content += '<button type="submit" value="Delete">Delete</button>'
+            content +='</form>'
             web.render('generic.html')
             
     def POST(self, nid):
@@ -158,6 +161,20 @@ class node_edit(page):
             checkaccess(self.page.user, ''.join(('edit own ',node.type,' content')))
         else:  # anyone else
             checkaccess(self.page.user, ''.join(('edit ',node.type,' content')))
+
+class node_delete(page):
+    def GET(self, nid):
+        page = self.page
+        node = mod.node.load(nid)
+        content = "Are You Sure You Want To Delete " + str(node.title) + "? This action cannot be undone."
+        content += '''<form method="post"><input type="submit" value="Delete" />
+        <input type="hidden" name="confirm" value="1"  /></form>'''
+        web.render('generic.html')
+        
+    def POST(self, nid):
+        pass
+        
+        
 #
 ## FUNCTIONS
 #
