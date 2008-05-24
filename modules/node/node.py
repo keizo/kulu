@@ -124,7 +124,7 @@ class node_edit(page):
             
             content = '<form method="post">'
             content += form.render()
-            content += '<input type="submit" />'
+            content += '<button type="submit" value="Edit">Submit</button>'
             content += '<button type="submit" value="Delete">Delete</button>'
             content +='</form>'
             web.render('generic.html')
@@ -166,14 +166,50 @@ class node_delete(page):
     def GET(self, nid):
         page = self.page
         node = mod.node.load(nid)
-        content = "Are You Sure You Want To Delete " + str(node.title) + "? This action cannot be undone."
-        content += '''<form method="post"><input type="submit" value="Delete" />
-        <input type="hidden" name="confirm" value="1"  /></form>'''
-        web.render('generic.html')
+        
+        if node is None:
+            pagenotfound()
+        else:
+            self._checkaccess(node)
+        
+            f = self._form_delete()
+            content = "Are You Sure You Want To Delete " + str(node.title) + "? This action cannot be undone."
+            content += '<form method="post"><input type="submit" value="Delete" />'
+            content += f.render()
+            content += '</form>'
+            web.render('generic.html')
         
     def POST(self, nid):
-        pass
+        page = self.page
+        node = mod.node.load(nid)
         
+        if node is None:
+            pagenotfound()
+        else:
+            self._checkaccess(node)
+            
+            f = self._form_delete()
+        
+            if f.validates():
+                content = "okay i should delete now"
+                web.render('generic.html')
+            else:
+                content = "error: the delete from wasn't submitted correctly. weird."
+                web.render('generic.html')
+    
+    def _checkaccess(self, node):
+        """Check if the current user has permission to delete this node."""
+        if self.page.user.uid and self.page.user.uid == node.uid:  # user is the owner
+            # CAVEAT: even if anyone can edit, the owner can edit only
+            # if 'edit own' is checked too
+            checkaccess(self.page.user, ''.join(('delete own ', node.type, ' content')))
+        else:  # anyone else
+            checkaccess(self.page.user, ''.join(('delete ', node.type, ' content')))
+        
+    def _form_delete(self):
+        return form.Form(
+            form.Hidden('confirm', form.notnull, value=1)
+            )
         
 #
 ## FUNCTIONS

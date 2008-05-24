@@ -23,7 +23,7 @@ constant = storage({
 variable = inc.util.Variable('variable', key_field='name', value_field='value')
 
 # Keeping permissions and roles in memory probably isn't a great idea if
-# there's going to be lots and lots of roles.  Ok since I only have a few.
+# there's going to be lots and lots of roles.  um, but ok since I only have a few.
 perm = inc.util.Variable('permission', key_field='rid', value_field='perm')
 role = inc.util.Variable('role', key_field='rid', value_field='name')
 
