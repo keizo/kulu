@@ -66,6 +66,9 @@ def node_update(node):
    web.insert('node_revisions',nid=node.nid,vid=new_vid, uid=node.uid,
               teaser=teaser, body=node.body, timestamp=node.time_now, 
               title=node.title, format=node.format)
+              
+def node_delete(node):
+    web.delete('node_revisions', where='nid=$node.nid', vars=locals())
     
 def form_node(users_roles=[1]):
     return form.Form(

@@ -35,6 +35,10 @@ class node(page):
                 or (hasaccess(page.user, ''.join(('edit own ', node.type, ' content'))) \
                 and page.user.uid == node.uid):
                 controls.append( (''.join(('/node/', str(node.nid), '/edit')),'edit') )
+            if hasaccess(self.page.user, ''.join(('delete ', node.type, ' content'))) \
+                or (hasaccess(page.user, ''.join(('delete own ', node.type, ' content'))) \
+                and page.user.uid == node.uid):
+                controls.append( (''.join(('/node/', str(node.nid), '/delete')),'delete') )
             controls = web.render('node_controls.html', asTemplate=True)
             
             try:
@@ -125,7 +129,6 @@ class node_edit(page):
             content = '<form method="post">'
             content += form.render()
             content += '<button type="submit" value="Edit">Submit</button>'
-            content += '<button type="submit" value="Delete">Delete</button>'
             content +='</form>'
             web.render('generic.html')
             
@@ -191,7 +194,12 @@ class node_delete(page):
             f = self._form_delete()
         
             if f.validates():
-                content = "okay i should delete now"
+                web.delete('node', where='nid=$node.nid', vars=locals())
+                # Do module specific deletes.
+                if hasattr(mod[node.type], 'node_delete'):
+                    mod[node.type].node_delete(node)
+                    
+                content = "okay, it's deleted"
                 web.render('generic.html')
             else:
                 content = "error: the delete from wasn't submitted correctly. weird."
