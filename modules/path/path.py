@@ -1,4 +1,6 @@
 
+import web
+
 from drupy import *
 
 
@@ -11,6 +13,9 @@ perms = (
     )
     
 class path(page):
+    @access('administer url aliases')
     def GET(self):
-        print 'path aliasing admin page goes here'
+        page = self.page
         
+        content = 'path aliasing admin page goes here'
+        web.render('generic.html')

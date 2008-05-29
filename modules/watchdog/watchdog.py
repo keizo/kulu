@@ -41,9 +41,18 @@ class watchdog_recent(page):
         u.name FROM watchdog w INNER JOIN users u \
         ON w.uid = u.uid''', limit=100)
         
-        content = ''
+        # i'm so fucking lazy, figure out the right way to do this.  
+        # ie a template, or theme function call like drupal
+        content = '<table><tr><th>type</th><th>date</th><th>message</th><th>user</th><th>operations</th>'
         for entry in iter_entries:
-            content += str(entry)
+            content += '<tr>'
+            content += ''.join(('<td>', str(entry.type), '</td>'))
+            content += ''.join(('<td>', str(entry.timestamp), '</td>'))
+            content += ''.join(('<td>', str(entry.message), '</td>'))
+            content += ''.join(('<td>', str(entry.name), '</td>'))
+            content += ''.join(('<td>','put operation here', '</td>'))
+            content += '</tr>'
+        content += '</table>'
             
         content += page_nums.render()
         web.render('generic.html')
