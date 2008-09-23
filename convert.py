@@ -10,15 +10,16 @@ __author__ = "Keizo Gates <kzo@kzo.net>"
 import web, db_params
 
 #drupy imports
-import includes as wd
+import loader
+inc = loader.import_('includes')
 
 from PHPUnserialize import *
 
 
 
 def convert_variable_table():
-    
-    variable = inc.Variable('variable',key_field='name',value_field='value')
+    """this unserializes (a php thing) the variable table so that python can understand it"""
+    variable = inc.util.Variable('variable', key_field='name', value_field='value')
     variable.load()
     #web.transact()
     u = PHPUnserialize()
@@ -26,6 +27,7 @@ def convert_variable_table():
         try:
             unserialized = u.unserialize(v[1])
             variable[v[0]] = unserialized
+            print 'converted',v[0]
         except:
             print v[0],'skipped',v[1]
     #web.commit()

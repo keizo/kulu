@@ -1,29 +1,44 @@
+import web
 
 
+def header_html(header):
+    """
+    $header An array containing the table headers. Each element of the array can be either a localized string or an associative array with the following keys:
 
-# it's like I'm retarded and have add... started and didn't finish
+    "data": The localized title of the table column.
+    "field": The database field represented in the table column (required if user is to be able to sort on this column).
+    "sort": A default sort order for this column ("asc" or "desc").
+    """
+    pass
 
-def tablesort_sql($header, $before = ''):
-"""Description
-Create an SQL sort clause.
+def sql(sortable_headers, before = ''):
+    """Description
+    Create an SQL sort clause.
 
-This function produces the ORDER BY clause to insert in your SQL queries, assuring that the returned database table rows match the sort order chosen by the user.
+    This function produces the ORDER BY clause to insert in your SQL queries, assuring that the returned database table rows match the sort order chosen by the user.
 
-Parameters
-$header A list of column headers in the format described in theme_table().
+    Parameters
+    sortable_headers - is a list of the database fields which the table
+    can be sorted by.  the first field listed is the default thing to
+    sort by.
 
-$before An SQL string to insert after ORDER BY and before the table sorting code. Useful for sorting by important attributes like "sticky" first.
+    $before An SQL string to insert after ORDER BY and before the table sorting code. Useful for sorting by important attributes like "sticky" first.
 
-Return value
-An SQL string to append to the end of a query.
-"""
-  $ts = tablesort_init($header);
-  if ($ts['sql']):
-    // Based on code from db_escape_table(), but this can also contain a dot.
-    $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
-
-    // Sort order can only be ASC or DESC.
-    $sort = drupal_strtoupper($ts['sort']);
-    $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
-
-    return " ORDER BY $before $field $sort";
+    Return value
+    An SQL string to append to the end of a query.
+    """
+    sort = 'ASC'
+    i = web.input()
+    if i.has_key('sort'):
+        if i['sort'] is 'desc' or i['sort'] is 'DESC':
+            sort = 'DESC'
+    else:
+        #TODO: look for default sort orders passed in by header argument
+        pass
+    
+    order_field = sortable_headers[0]
+    if i.has_key('order_by'):
+        if i['order_by'] in sortable_headers:
+            order_field = i['order_by']
+            
+    return ' '.join((" ORDER BY",before, order_field, sort))

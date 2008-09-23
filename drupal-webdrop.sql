@@ -34,6 +34,30 @@ CREATE TABLE `cache_node` (
 
 
 ALTER TABLE  `node_revisions` DROP PRIMARY KEY ,
-ADD PRIMARY KEY (  `nid` ,  `vid` )
+ADD PRIMARY KEY (  `nid` ,  `vid` );
     
-ALTER TABLE  `node` DROP INDEX  `vid`
+ALTER TABLE  `node` DROP INDEX  `vid`;
+
+
+--
+-- Table structure for table `filter`
+--
+
+CREATE TABLE filter (
+  format int(4) NOT NULL auto_increment,
+  modules text NOT NULL,
+  `name` varchar(255) NOT NULL default '',
+  tips text NOT NULL,
+  roles varchar(255) NOT NULL default '',
+  `cache` tinyint(2) NOT NULL default '0',
+  PRIMARY KEY  (format),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `filter`
+--
+
+INSERT INTO filter VALUES (1,'filter_html_sanitize, filter_markdown, filter_urlize','Filtered HTML','<ul>\r\n<li>Format using markdown.</li>\r\n<li>Some HTML is allowed</li>\r\n</ul>\r\n','1, 2, 3',1);
+INSERT INTO filter VALUES (2,'','PHP code','','',0);
+INSERT INTO filter VALUES (3,'filter_html_sanitize','Full HTML','','3',1);

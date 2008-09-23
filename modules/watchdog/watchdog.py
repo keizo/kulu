@@ -36,23 +36,43 @@ class watchdog_recent(page):
     def GET(self):
         page = self.page
         
+        sortable_headers = ['timestamp', 'type', 'message', 'name']
+        order_sql = inc.tablesort.sql(sortable_headers)
+        
         iter_entries, page_nums = inc.pager.query('''SELECT w.wid, \
         w.uid, w.severity, w.type, w.timestamp, w.message, w.link, \
         u.name FROM watchdog w INNER JOIN users u \
-        ON w.uid = u.uid''', limit=100)
+        ON w.uid = u.uid'''+order_sql, limit=100)
         
+        headers = [ {'title':'Type', 'name':'type'},
+                    {'title':'Date', 'name':'timestamp', 'sort':'desc'}, 
+                    {'title':'Message', 'name':'message'}, 
+                    {'title':'User', 'name':'name'} ]
+        rows = []
+        for entry in iter_entries:
+            rows.append( (str(entry.type),
+                          str(inc.common.format_date(entry.timestamp)),
+                          str(entry.message),
+                          str(entry.name),
+                          'put operation here') )
+
+        table = str(web.render('table.html', terms={'rows':rows, 'headers':headers}, asTemplate=True))
+
+        content = table
         # i'm so fucking lazy, figure out the right way to do this.  
         # ie a template, or theme function call like drupal
+        '''
         content = '<table><tr><th>type</th><th>date</th><th>message</th><th>user</th><th>operations</th>'
         for entry in iter_entries:
             content += '<tr>'
             content += ''.join(('<td>', str(entry.type), '</td>'))
-            content += ''.join(('<td>', str(entry.timestamp), '</td>'))
+            content += ''.join(('<td>', str(inc.common.format_date(entry.timestamp)), '</td>'))
             content += ''.join(('<td>', str(entry.message), '</td>'))
             content += ''.join(('<td>', str(entry.name), '</td>'))
             content += ''.join(('<td>','put operation here', '</td>'))
             content += '</tr>'
         content += '</table>'
+         '''
             
         content += page_nums.render()
         web.render('generic.html')

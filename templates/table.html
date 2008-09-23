@@ -1,0 +1,20 @@
+#filter RawOrEncodedUnicode
+<table>
+<tr>
+#for $heading in $headers
+    #if $heading.name
+        <th><a href="?sort=desc&order_by=${heading.name}">$heading.title</a></th>
+    #else
+        <th>$heading.title</th>
+    #end if
+#end for
+</tr>
+#for $row in $rows
+    <tr>
+        #for $cell in $row
+            <td>$cell</td>
+        #end for
+    </tr>
+#end for
+</table>
+#end filter

@@ -38,6 +38,7 @@ filter_roles = inc.util.VariableList('filter', key_field='format', value_field='
 # using the word 'filter' overrides the function filter, 
 # but I guess we won't ever use it here...
 
+
 def load():
     # Load into memory from database
     variable.load()
