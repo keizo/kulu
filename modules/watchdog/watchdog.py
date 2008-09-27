@@ -36,44 +36,34 @@ class watchdog_recent(page):
     def GET(self):
         page = self.page
         
-        sortable_headers = ['timestamp', 'type', 'message', 'name']
-        order_sql = inc.tablesort.sql(sortable_headers)
+        table = inc.tablesort.table()
         
-        iter_entries, page_nums = inc.pager.query('''SELECT w.wid, \
+        table.header.titles = ['Type',  'Date',         'Message',  'User', 'Operation']
+        table.header.fields = ['type',  'timestamp',    'message',  'name']
+        table.header.sorts   = ['asc',   'desc',         'asc',      'asc']
+        table.default_order_by = 'timestamp'
+        
+        sql = '''SELECT w.wid, \
         w.uid, w.severity, w.type, w.timestamp, w.message, w.link, \
         u.name FROM watchdog w INNER JOIN users u \
-        ON w.uid = u.uid'''+order_sql, limit=100)
+        ON w.uid = u.uid'''+table.order_sql()
         
-        headers = [ {'title':'Type', 'name':'type'},
-                    {'title':'Date', 'name':'timestamp', 'sort':'desc'}, 
-                    {'title':'Message', 'name':'message'}, 
-                    {'title':'User', 'name':'name'} ]
-        rows = []
+        iter_entries, page_nums = inc.pager.query(sql, limit=100)
+        
+        #TODO: i don't quite understand why this line is needed,
+        # but i do know things stop working without it
+        table.rows = [] 
         for entry in iter_entries:
-            rows.append( (str(entry.type),
+            table.rows.append( (str(entry.type),
                           str(inc.common.format_date(entry.timestamp)),
                           str(entry.message),
                           str(entry.name),
                           'put operation here') )
-
-        table = str(web.render('table.html', terms={'rows':rows, 'headers':headers}, asTemplate=True))
-
-        content = table
-        # i'm so fucking lazy, figure out the right way to do this.  
-        # ie a template, or theme function call like drupal
-        '''
-        content = '<table><tr><th>type</th><th>date</th><th>message</th><th>user</th><th>operations</th>'
-        for entry in iter_entries:
-            content += '<tr>'
-            content += ''.join(('<td>', str(entry.type), '</td>'))
-            content += ''.join(('<td>', str(inc.common.format_date(entry.timestamp)), '</td>'))
-            content += ''.join(('<td>', str(entry.message), '</td>'))
-            content += ''.join(('<td>', str(entry.name), '</td>'))
-            content += ''.join(('<td>','put operation here', '</td>'))
-            content += '</tr>'
-        content += '</table>'
-         '''
-            
+        
+        content = sql
+        
+        content += table.render()
+               
         content += page_nums.render()
         web.render('generic.html')
         
